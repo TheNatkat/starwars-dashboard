@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Home from './pages/Home';
 import usePageStore from '../store/pagestore';
 import Films from './pages/Films';
-// import People from './pages/People';
-// import Planets from './pages/Planets';
-// import Species from './pages/Species';
-// import Starships from './pages/Starships';
-// import Vehicles from './pages/Vehicles';
+import People from './pages/People';
+import Planets from './pages/Planets';
+import Species from './pages/Species';
+import Starships from './pages/Starships';
+import Vehicles from './pages/Vehicles';
 import GridOnIcon from '../assets/gridonicon.svg';
 import GridOffIcon from '../assets/gridofficon.svg';
 import ListOnIcon from '../assets/listonicon.svg';
 import ListOffIcon from '../assets/listofficon.svg';
-
 
 const Mid = styled.section`
   padding: 2rem;
@@ -44,15 +43,32 @@ const ToggleContainer = styled.div`
 `;
 
 const ToggleButton = styled.div`
+  display: flex;
   height: 4vh;
+  border-radius: 8px;
+`;
+
+const ToggleButtonPart = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #03123d;
-  border-radius: 8px;
+  height: 100%;
+  border: 1px solid white;
+  border-radius: ${(props) => (props.isLeft ? '8px 0 0 8px' : '0 8px 8px 0')};
+  background-color: ${(props) => (props.isActive ? 'white' : '#03123d')};
   cursor: pointer;
 `;
 
+const ToggleButtonText = styled.h6`
+  font-weight: 300;
+  font-size: 0.8rem;
+  padding-right: 0.5rem;
+`;
+
+const Icon = styled.img`
+  padding: 0.5rem;
+  padding-right: ${(props) => (props.isLeft ? '0rem' : '0.5rem')};
+`;
 
 interface AllPages {
   [key: string]: React.ComponentType<any>;
@@ -60,11 +76,11 @@ interface AllPages {
 
 const allPages: AllPages = {
   Films: Films,
-//   People: People,
-//   Planets: Planets,
-//   Species: Species,
-//   Starships: Starships,
-//   Vehicles: Vehicles,
+  People: People,
+  Planets: Planets,
+  Species: Species,
+  Starships: Starships,
+  Vehicles: Vehicles,
   Home: Home,
 };
 
@@ -72,14 +88,12 @@ const MidSection = () => {
   const page = usePageStore((state) => state.page);
   const isGrid = usePageStore((state) => state.isGrid);
   const setIsGrid = usePageStore((state) => state.setIsGrid);
-  console.log(isGrid);
 
-  const PageToRender = allPages[page] || Home; // Default to Home if the page is not found
+  const PageToRender = allPages[page] || Home;
 
-   const handleToggleChange = () => {
-     setIsGrid(!isGrid);
-
-   };
+  const handleToggleChange = () => {
+    setIsGrid(!isGrid);
+  };
 
   return (
     <Mid>
@@ -88,39 +102,14 @@ const MidSection = () => {
           <Text>{page}</Text>
           <ToggleContainer>
             <ToggleButton onClick={handleToggleChange}>
-              <div
-                style={{
-                  backgroundColor: isGrid ? 'white' : '#03123d',
-                  display: 'flex',
-                  height: '4vh',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: '8px',
-                  borderBottomRightRadius: '0px',
-                  borderTopRightRadius: '0px',
-                  border: '1px solid white',
-                }}
-              >
-                <img src={isGrid ? GridOnIcon : GridOffIcon} style={{padding: '0.5rem', paddingRight: isGrid ? '0rem' : '0.5rem'}}/>
-                {isGrid && <h6 style={{ paddingRight: '0.5rem', fontWeight: '300', fontSize: '0.8rem' }}>Grid</h6>}
-              </div>
-              <div
-                style={{
-                  backgroundColor: !isGrid ? 'white' : '#03123d',
-                  display: 'flex',
-                  height: '4vh',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: '0.5rem',
-                  borderRadius: '8px',
-                  borderTopLeftRadius: '0px',
-                  borderBottomLeftRadius: '0px',
-                  border: '1px solid white',
-                }}
-              >
-                <img src={isGrid ? ListOffIcon : ListOnIcon} />
-                {!isGrid && <h6 style={{ paddingRight: '0.5rem', fontWeight: '300', fontSize: '0.8rem' }}>List</h6>}
-              </div>
+              <ToggleButtonPart isLeft isActive={isGrid}>
+                <Icon src={isGrid ? GridOnIcon : GridOffIcon} />
+                {isGrid && <ToggleButtonText>Grid</ToggleButtonText>}
+              </ToggleButtonPart>
+              <ToggleButtonPart isActive={!isGrid}>
+                <Icon src={isGrid ? ListOffIcon : ListOnIcon} />
+                {!isGrid && <ToggleButtonText>List</ToggleButtonText>}
+              </ToggleButtonPart>
             </ToggleButton>
           </ToggleContainer>
         </HeadingSection>
