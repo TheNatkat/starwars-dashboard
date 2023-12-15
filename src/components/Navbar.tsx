@@ -18,7 +18,7 @@ const InputContainer = styled.div`
 
 const Searchbar = styled.input`
   height: 3.5vh;
-  width: 20vw;
+  width: 15vw;
   background-color: #03123d;
   padding: 0.3rem;
   color: white;
