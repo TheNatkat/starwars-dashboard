@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import starWarsLogo from '../assets/logo.svg';
 import seachIcon from '../assets/seachicon.svg';
+import usePageStore from '../store/pagestore';
 
 const BarWrapper = styled.section`
   height: 10vh;
@@ -25,7 +26,7 @@ const Searchbar = styled.input`
   border: 1px solid white;
   text-decoration: none;
   border-radius: 4px;
-  padding-left: 2rem; 
+  padding-left: 2rem;
   ::placeholder {
     color: white;
   }
@@ -39,11 +40,13 @@ const SearchIcon = styled.img`
 `;
 
 const Navbar = () => {
+  const setPage = usePageStore((state) => state.setPage);
+
   return (
     <BarWrapper>
-      <img src={starWarsLogo} alt="Star Wars Logo" />
+      <img src={starWarsLogo} alt="Star Wars Logo" onClick={() => setPage('Home')} />
       <InputContainer>
-        <SearchIcon src={seachIcon}/>
+        <SearchIcon src={seachIcon} />
         <Searchbar placeholder="Search" />
       </InputContainer>
     </BarWrapper>

@@ -12,7 +12,6 @@ const PageWapper = styled.div`
 const MidBox = styled.div`
   display: flex;
   padding: 1rem;
-  
   flex-direction: column;
   justify-content: center;
   background-color: white;
