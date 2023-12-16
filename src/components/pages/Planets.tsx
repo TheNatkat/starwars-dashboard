@@ -5,6 +5,7 @@ import LoadingAnimation from '../../assets/loading.svg';
 import OptionIcon from '../../assets/optionsicon.svg';
 import OptionListIcon from '../../assets/optiontransprenticon.svg';
 import usePageStore from '../../store/pagestore';
+import CloseIcon from '../../assets/closeicon.svg';
 
 const PlanetsGrid = styled.div`
   display: flex;
@@ -122,8 +123,9 @@ const TableHeader = styled.th`
 `;
 
 const TableRow = styled.tr`
-  &:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
   }
 `;
 
@@ -145,9 +147,106 @@ const OptionsList = styled(Option)`
   justify-content: flex-end;
 `;
 
+const PopupSidebar = styled.div`
+  postion: relative;
+  display: flex;
+  border-left: 1px solid white;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 25vw;
+  background-color: #03123d;
+  z-index: 1000;
+  padding: 1.5rem 1rem;
+  animation: fadeIn 0.4s ease-in-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+`;
+
+const PopUpTitleWrapper = styled.div`
+  border-bottom: 1px solid white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6vh;
+`;
+
+const PopUpTitle = styled.div`
+  color: white;
+  margin: 0rem 1rem;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+  font-weight: 600;
+`;
+
+const PopUpCloseWrapper = styled.div`
+  bottom: 0%;
+  position: absolute;
+  border-top: 1px solid white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6vh;
+`;
+
+const CloseButton = styled.div`
+  padding: 0.5rem 0.5rem;
+  width: 23vw;
+  color: white;
+  background-color: #cc1980;
+  text-align: center;
+  border-radius: 8px;
+`;
+
+const PopUpData = styled.div`
+  margin: 1rem;
+  overflow: scroll;
+  marginTop: 2rem;
+  display: flex;
+  height: 80vh;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start:
+  
+`;
+
+const PopTextHeading = styled.div`
+  margin: 1rem 0rem;
+  color: white;
+  font-size: 300;
+`;
+
+const PopUpText = styled.div`
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+`;
+
+const PopUpImage = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  z-index: 0;
+  border: 1px solid white;
+  border-radius: 10px;
+`;
+
 const Planets = () => {
   const [allPlanets, setAllPlanets] = useState([]);
   const isGrid = usePageStore((state) => state.isGrid);
+  const [selectedPlanet, setSelectedPlanet] = useState(null);
 
   const fetchPlanets = async () => {
     try {
@@ -157,6 +256,10 @@ const Planets = () => {
     } catch (error) {
       console.error('Error fetching planets:', error);
     }
+  };
+
+  const closeSidebar = () => {
+    setSelectedPlanet(null);
   };
 
   useEffect(() => {
@@ -176,7 +279,7 @@ const Planets = () => {
       ) : isGrid ? (
         <PlanetsGrid>
           {allPlanets.map((planet, index) => (
-            <PlanetCard key={index}>
+            <PlanetCard onClick={() => setSelectedPlanet(planet)} key={index}>
               <PlanetImage src={`https://picsum.photos/id/${Math.floor(Math.random() * 100)}/300/200`} />
               <TitleBox>
                 <PlanetTitle>
@@ -210,7 +313,7 @@ const Planets = () => {
           </thead>
           <tbody>
             {allPlanets.map((planet) => (
-              <TableRow key={planet.url}>
+              <TableRow onClick={() => setSelectedPlanet(planet)} key={planet.url}>
                 <TableColumn>
                   <PlanetTitleList>
                     <img src={PlanetIcon} alt="Planet Icon" />
@@ -237,6 +340,38 @@ const Planets = () => {
             ))}
           </tbody>
         </TableList>
+      )}
+
+      {selectedPlanet && (
+        <PopupSidebar>
+          <PopUpTitleWrapper>
+            <PopUpTitle>{selectedPlanet.name}</PopUpTitle>
+            <img onClick={closeSidebar} src={CloseIcon} alt="Close" />
+          </PopUpTitleWrapper>
+          <PopUpData>
+            <PopTextHeading>Image</PopTextHeading>
+            <PopUpImage src={`https://picsum.photos/id/${Math.floor(Math.random() * 100)}/300/200`} alt="Planet" />
+            <PopTextHeading>Name</PopTextHeading>
+            <PopUpText>{selectedPlanet.name}</PopUpText>
+            <PopTextHeading>Climate</PopTextHeading>
+            <PopUpText>{selectedPlanet.climate}</PopUpText>
+            <PopTextHeading>Population</PopTextHeading>
+            <PopUpText>{selectedPlanet.population}</PopUpText>
+            <PopTextHeading>Gravity</PopTextHeading>
+            <PopUpText>{selectedPlanet.gravity}</PopUpText>
+            <PopTextHeading>Diameter</PopTextHeading>
+            <PopUpText>{selectedPlanet.diameter}</PopUpText>
+            <PopTextHeading>Orbital Period</PopTextHeading>
+            <PopUpText>{selectedPlanet.orbital_period}</PopUpText>
+            <PopTextHeading>Surface Water</PopTextHeading>
+            <PopUpText>{selectedPlanet.surface_water}</PopUpText>
+            <PopTextHeading>Rotation Period</PopTextHeading>
+            <PopUpText>{selectedPlanet.rotation_period}</PopUpText>
+          </PopUpData>
+          <PopUpCloseWrapper>
+            <CloseButton onClick={closeSidebar}>Close</CloseButton>
+          </PopUpCloseWrapper>
+        </PopupSidebar>
       )}
     </>
   );

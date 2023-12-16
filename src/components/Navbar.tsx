@@ -44,7 +44,7 @@ const Navbar = () => {
 
   return (
     <BarWrapper>
-      <img src={starWarsLogo} alt="Star Wars Logo" onClick={() => setPage('Home')} />
+      <img style={{ cursor: "pointer"}} src={starWarsLogo} alt="Star Wars Logo" onClick={() => setPage('Home')} />
       <InputContainer>
         <SearchIcon src={seachIcon} />
         <Searchbar placeholder="Search" />

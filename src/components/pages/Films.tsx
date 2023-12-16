@@ -65,11 +65,10 @@ const Text = styled.h2`
 const LoadingText = styled.div`
   color: white;
   text-align: center;
-
   font-size: 1.5rem;
   display: flex;
   justify-content: center;
-  align-item: center;
+  align-items: center;
 `;
 
 const TitleBox = styled.div`
@@ -134,17 +133,19 @@ const TableList = styled.table`
 const TableHeader = styled.th`
   text-align: left;
   padding: 1rem;
-  background-color:#4D5875;
+  background-color: #4d5875;
 `;
 
 const TableRow = styled.tr`
-  &:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
   }
 `;
 
 const TableColumn = styled.td`
   padding: 1rem;
+ 
   border-bottom: 1px solid white;
 `;
 
@@ -162,7 +163,7 @@ const OptionsList = styled(Option)`
 `;
 
 const PopupSidebar = styled.div`
-postion: relative;
+  postion: relative;
   display: flex;
   border-left: 1px solid white;
   flex-direction: column;
@@ -202,18 +203,17 @@ const PopUpTitle = styled.div`
   font-size: 1.2rem;
   text-transform: capitalize;
   font-weight: 600;
-`
+`;
 
 const PopUpCloseWrapper = styled.div`
-bottom: 0%;
-position: absolute;
+  bottom: 0%;
+  position: absolute;
   border-top: 1px solid white;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 6vh;
 `;
-
 
 const CloseButton = styled.div`
   padding: 0.5rem 0.5rem;
@@ -240,13 +240,12 @@ const PopTextHeading = styled.div`
   margin: 1rem 0rem;
   color: white;
   font-size: 300;
-`
+`;
 
 const PopUpText = styled.div`
   background-color: white;
   border-radius: 8px;
   padding: 1rem;
- 
 `;
 
 
@@ -255,12 +254,21 @@ const Films = () => {
   const [allFilms, setAllFilms] = useState([]);
   const isGrid = usePageStore((state) => state.isGrid);
   const [selectedFilm, setSelectedFilm] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filmsPerPage] = useState(10);
+  const [totalFilms, setTotalFilms] = useState(0);
+  const indexOfLastFilm = currentPage * filmsPerPage;
+  const indexOfFirstFilm = indexOfLastFilm - filmsPerPage;
+  const currentFilms = allFilms.slice(indexOfFirstFilm, indexOfLastFilm);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const fetchFilms = async () => {
     try {
       const response = await fetch('https://swapi.dev/api/films/');
       const data = await response.json();
       setAllFilms(data.results);
+      setTotalFilms(data.count);
     } catch (error) {
       console.error('Error fetching films:', error);
     }
@@ -273,7 +281,6 @@ const Films = () => {
   useEffect(() => {
     fetchFilms();
   }, []);
-
 
   return (
     <>
@@ -351,6 +358,9 @@ const Films = () => {
           </tbody>
         </TableList>
       )}
+
+      <Pagination filmsPerPage={filmsPerPage} totalFilms={totalFilms} paginate={paginate} currentPage={currentPage} />
+
       {selectedFilm && (
         <PopupSidebar>
           <PopUpTitleWrapper>
@@ -378,6 +388,26 @@ const Films = () => {
         </PopupSidebar>
       )}
     </>
+  );
+};
+
+const Pagination = ({ filmsPerPage, totalFilms, paginate, currentPage }) => {
+  const pageNumbers = [];
+
+  for (let i = 1; i <= Math.ceil(totalFilms / filmsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    <nav>
+      <ul>
+        {pageNumbers.map((number) => (
+          <li key={number} onClick={() => paginate(number)} className={currentPage === number ? 'active' : ''}>
+            {number}
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 };
 
