@@ -20,6 +20,7 @@ const MidBox = styled.div`
 `;
 
 const Title = styled.h1`
+    color: #3B3F5C;
   font-size: 1.8rem;
   font-weight: 600;
   text-align: left;

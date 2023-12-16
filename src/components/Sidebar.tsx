@@ -6,7 +6,7 @@ import usePageStore from '../store/pagestore';
 
 const SideBarWrapper = styled.section`
   height: 90vh;
-  width: 17.5vw;
+  width: 30vw;
   padding: 1.5rem;
 `;
 
@@ -17,7 +17,8 @@ const OptionsSection = styled.div`
 `;
 
 const Options = styled.div`
-  color: white;
+  padding: 0.6rem;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,7 +38,7 @@ const Sidebar: React.FC = () => {
   const allOptions = ['Films', 'People', 'Planets', 'Species', 'Starships', 'Vehicles'];
   const setPage = usePageStore((state) => state.setPage);
   const currentPage = usePageStore((state) => state.page);
-   const setIsGrid = usePageStore((state) => state.setIsGrid);
+  const setIsGrid = usePageStore((state) => state.setIsGrid);
 
   const handleOptionClick = (newPage: string) => {
     if (newPage == currentPage) return;
@@ -50,16 +51,22 @@ const Sidebar: React.FC = () => {
     }
   };
 
+
+
   return (
     <SideBarWrapper>
       <OptionsSection>
         {allOptions.map((item, idx) => (
-          <Options key={idx} onClick={() => handleOptionClick(item)}>
+          <Options
+            style={{ backgroundColor: item !== currentPage ? '#03123D' : '#cc1980' }}
+            key={idx}
+            onClick={() => handleOptionClick(item)}
+          >
             <TextArea>
               <img src={folderIcon} alt="Folder Icon" />
               {item}
             </TextArea>
-            <img src={rightArrowIcon} alt="Right Arrow Icon" />
+            <img src={rightArrowIcon} style={{ transform: item === currentPage ? 'rotate(90deg)' : "" }} alt="Right Arrow Icon" />
           </Options>
         ))}
       </OptionsSection>

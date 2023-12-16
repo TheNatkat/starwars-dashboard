@@ -54,20 +54,20 @@ const ToggleButtonPart = styled.div`
   align-items: center;
   height: 100%;
   border: 1px solid white;
-  border-radius: ${(props) => (props.isLeft ? '8px 0 0 8px' : '0 8px 8px 0')};
-  background-color: ${(props) => (props.isActive ? 'white' : '#03123d')};
+  
+  background-color: ${(props) => (props.isactive == "true" ? 'white' : '#03123d')};
   cursor: pointer;
 `;
 
 const ToggleButtonText = styled.h6`
   font-weight: 300;
-  font-size: 0.8rem;
+  font-size: 1rem;
   padding-right: 0.5rem;
 `;
 
 const Icon = styled.img`
   padding: 0.5rem;
-  padding-right: ${(props) => (props.isLeft ? '0rem' : '0.5rem')};
+  
 `;
 
 interface AllPages {
@@ -102,11 +102,11 @@ const MidSection = () => {
           <Text>{page}</Text>
           <ToggleContainer>
             <ToggleButton onClick={handleToggleChange}>
-              <ToggleButtonPart isLeft isActive={isGrid}>
+              <ToggleButtonPart isactive={isGrid ? 'true' : 'false'}>
                 <Icon src={isGrid ? GridOnIcon : GridOffIcon} />
                 {isGrid && <ToggleButtonText>Grid</ToggleButtonText>}
               </ToggleButtonPart>
-              <ToggleButtonPart isActive={!isGrid}>
+              <ToggleButtonPart isactive={!isGrid ? 'true' : 'false'}>
                 <Icon src={isGrid ? ListOffIcon : ListOnIcon} />
                 {!isGrid && <ToggleButtonText>List</ToggleButtonText>}
               </ToggleButtonPart>

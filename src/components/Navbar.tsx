@@ -28,7 +28,7 @@ const Searchbar = styled.input`
   border-radius: 4px;
   padding-left: 2rem;
   ::placeholder {
-    color: white;
+    color: white !important;
   }
 `;
 

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FilmIcon from '../../assets/filmicon.svg';
+import LoadingAnimation from '../../assets/loading.svg';
 import OptionIcon from '../../assets/optionsicon.svg';
+import CloseIcon from '../../assets/closeicon.svg';
 import OptionListIcon from '../../assets/optiontransprenticon.svg';
 import usePageStore from '../../store/pagestore';
 
@@ -21,6 +23,7 @@ const FilmCard = styled.div`
   filter: grayscale(100%);
   -webkit-filter: grayscale(100%);
   -webkit-transition: all 1s ease;
+  z-index: 1;
 
   &:hover {
     filter: grayscale(0%);
@@ -29,6 +32,7 @@ const FilmCard = styled.div`
     filter: none;
     transition: 1s ease;
     transform: scale(0.99);
+    z-index: 1;
   }
 `;
 
@@ -37,6 +41,17 @@ const FilmImage = styled.img`
   height: 100%;
   border-radius: 10px;
   object-fit: cover;
+  z-index: 0;
+`;
+
+const PopUpImage = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  z-index: 0;
+  border: 1px solid white;
+  border-radius: 10px;
 `;
 
 const Text = styled.h2`
@@ -45,6 +60,16 @@ const Text = styled.h2`
   font-size: 1rem;
   font-weight: 300;
   align-self: center;
+`;
+
+const LoadingText = styled.div`
+  color: white;
+  text-align: center;
+
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-item: center;
 `;
 
 const TitleBox = styled.div`
@@ -67,8 +92,36 @@ const FilmTitle = styled.div`
 `;
 
 const Option = styled.div`
+  position: relative;
   border-radius: 5px;
   cursor: pointer;
+  z-index: 2;
+`;
+
+const DropdownMenu = styled.div`
+  display: none;
+  position: absolute;
+  bottom: ${(props) => (props.view != 'true' ? '' : '100%')};
+  top: ${(props) => (props.view == 'true' ? '' : '100%')};
+  right: 0;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 0.5rem;
+  z-index: 3;
+
+  ${Option}:hover & {
+    z-index: 100 !important;
+    display: block;
+  }
+`;
+
+const DropDownItem = styled.p`
+  padding: 0.5rem;
+  color: black;
+  & ~ &:hover {
+    background-color: #f1f1f5;
+  }
 `;
 
 const TableList = styled.table`
@@ -80,7 +133,8 @@ const TableList = styled.table`
 
 const TableHeader = styled.th`
   text-align: left;
-  padding: 0.5rem;
+  padding: 1rem;
+  background-color:#4D5875;
 `;
 
 const TableRow = styled.tr`
@@ -90,8 +144,8 @@ const TableRow = styled.tr`
 `;
 
 const TableColumn = styled.td`
-  padding: 0.5rem;
-  border-bottom: 1px solid white; /* Add this line */
+  padding: 1rem;
+  border-bottom: 1px solid white;
 `;
 
 const FilmTitleList = styled.div`
@@ -103,52 +157,159 @@ const FilmTitleList = styled.div`
 `;
 
 const OptionsList = styled(Option)`
-display: flex;
-justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
 `;
+
+const PopupSidebar = styled.div`
+postion: relative;
+  display: flex;
+  border-left: 1px solid white;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 25vw;
+  background-color: #03123d;
+  z-index: 1000;
+  padding: 1.5rem 1rem;
+  animation: fadeIn 0.4s ease-in-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+`;
+
+const PopUpTitleWrapper = styled.div`
+  border-bottom: 1px solid white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6vh;
+`;
+
+const PopUpTitle = styled.div`
+  color: white;
+  margin: 0rem 1rem;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+  font-weight: 600;
+`
+
+const PopUpCloseWrapper = styled.div`
+bottom: 0%;
+position: absolute;
+  border-top: 1px solid white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6vh;
+`;
+
+
+const CloseButton = styled.div`
+  padding: 0.5rem 0.5rem;
+  width: 23vw;
+  color: white;
+  background-color: #cc1980;
+  text-align: center;
+  border-radius: 8px;
+`;
+
+const PopUpData = styled.div`
+  margin: 1rem;
+  overflow: scroll;
+  marginTop: 2rem;
+  display: flex;
+  height: 80vh;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start:
+  
+`;
+
+const PopTextHeading = styled.div`
+  margin: 1rem 0rem;
+  color: white;
+  font-size: 300;
+`
+
+const PopUpText = styled.div`
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+ 
+`;
+
 
 
 const Films = () => {
   const [allFilms, setAllFilms] = useState([]);
   const isGrid = usePageStore((state) => state.isGrid);
+  const [selectedFilm, setSelectedFilm] = useState(null);
 
   const fetchFilms = async () => {
     try {
       const response = await fetch('https://swapi.dev/api/films/');
       const data = await response.json();
-      console.log(data.results);
       setAllFilms(data.results);
     } catch (error) {
       console.error('Error fetching films:', error);
     }
   };
 
+  const closeSidebar = () => {
+    setSelectedFilm(null);
+  };
+
   useEffect(() => {
     fetchFilms();
   }, []);
 
+
   return (
     <>
-      {isGrid ? (
+      {allFilms.length === 0 ? (
+        <LoadingText>
+          <Text>{`Loading Films Data`}</Text>
+          <img
+            style={{ color: 'wheat', width: '30px', height: '30px', margin: '5px', display: 'inline-block' }}
+            src={LoadingAnimation}
+          ></img>
+        </LoadingText>
+      ) : isGrid ? (
         <FilmsGrid>
-          {allFilms.length !== 0 ? (
-            allFilms.map((film, index) => (
-              <FilmCard key={index}>
-                <FilmImage src={`https://picsum.photos/id/${Math.floor(Math.random() * 100)}/300/200`} />
-                <TitleBox>
-                  <FilmTitle>
-                    <img src={FilmIcon} />
-                    <Text>{film?.title}</Text>
-                  </FilmTitle>
-                  <Option>
-                    <img src={OptionIcon} />
-                  </Option>
-                </TitleBox>
-              </FilmCard>
-            ))
-          ) : (
-            <Text>Loading Data.....</Text>
-          )}
+          {allFilms.map((film, index) => (
+            <FilmCard onClick={() => setSelectedFilm(film)} key={index}>
+              <FilmImage src={`https://picsum.photos/id/${Math.floor(Math.random() * 100)}/300/200`} />
+              <TitleBox>
+                <FilmTitle>
+                  <img src={FilmIcon} alt="Film Icon" />
+                  <Text>{film?.title}</Text>
+                </FilmTitle>
+                <Option>
+                  <img src={OptionIcon} alt="Option Icon" />
+                  <DropdownMenu view={isGrid ? 'true' : 'false'}>
+                    <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
+                    <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
+                    <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
+                    <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
+                    <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
+                    <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
+                    <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                  </DropdownMenu>
+                </Option>
+              </TitleBox>
+            </FilmCard>
+          ))}
         </FilmsGrid>
       ) : (
         <TableList>
@@ -157,28 +318,64 @@ const Films = () => {
               <TableHeader>Name</TableHeader>
               <TableHeader>Director</TableHeader>
               <TableHeader>Release Date</TableHeader>
+              <TableHeader></TableHeader>
             </tr>
           </thead>
           <tbody>
-            {allFilms.map((film, index) => (
-              <TableRow key={index}>
+            {allFilms.map((film) => (
+              <TableRow onClick={() => setSelectedFilm(film)} key={film.episode_id}>
                 <TableColumn>
                   <FilmTitleList>
-                    <img src={FilmIcon} />
-                    <Text>{film?.title}</Text>
+                    <img src={FilmIcon} alt="Film Icon" />
+                    <Text>{film.title}</Text>
                   </FilmTitleList>
                 </TableColumn>
                 <TableColumn>{film.director}</TableColumn>
                 <TableColumn>{film.release_date}</TableColumn>
                 <TableColumn>
                   <OptionsList>
-                    <img src={OptionListIcon} />
+                    <img src={OptionListIcon} alt="Option List Icon" />
+                    <DropdownMenu view={isGrid ? 'true' : 'false'}>
+                      <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
+                      <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
+                      <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
+                      <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
+                      <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
+                      <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
+                      <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                    </DropdownMenu>
                   </OptionsList>
                 </TableColumn>
               </TableRow>
             ))}
           </tbody>
         </TableList>
+      )}
+      {selectedFilm && (
+        <PopupSidebar>
+          <PopUpTitleWrapper>
+            <PopUpTitle>{selectedFilm.title}</PopUpTitle>
+            <img onClick={closeSidebar} src={CloseIcon}></img>
+          </PopUpTitleWrapper>
+          <PopUpData>
+            <PopTextHeading>Image</PopTextHeading>
+            <PopUpImage src={`https://picsum.photos/id/${Math.floor(Math.random() * 100)}/300/200`} />
+            <PopTextHeading>Name</PopTextHeading>
+            <PopUpText>{selectedFilm.title}</PopUpText>
+            <PopTextHeading>Release Date</PopTextHeading>
+            <PopUpText>{selectedFilm.release_date}</PopUpText>
+            <PopTextHeading>Director</PopTextHeading>
+            <PopUpText>{selectedFilm.director}</PopUpText>
+            <PopTextHeading>Producer</PopTextHeading>
+            <PopUpText>{selectedFilm.producer}</PopUpText>
+            <PopTextHeading>Summary</PopTextHeading>
+            <PopUpText>{selectedFilm.opening_crawl}</PopUpText>
+          </PopUpData>
+
+          <PopUpCloseWrapper>
+            <CloseButton onClick={closeSidebar}>Close</CloseButton>
+          </PopUpCloseWrapper>
+        </PopupSidebar>
       )}
     </>
   );
