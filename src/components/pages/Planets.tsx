@@ -6,6 +6,13 @@ import OptionIcon from '../../assets/optionsicon.svg';
 import OptionListIcon from '../../assets/optiontransprenticon.svg';
 import usePageStore from '../../store/pagestore';
 import CloseIcon from '../../assets/closeicon.svg';
+import DeleteIcon from '../../assets/deleteicon.svg';
+import DownloadIcon from '../../assets/downloadicon.svg';
+import MoveIcon from '../../assets/moveicon.svg';
+import MovePrivateIcon from '../../assets/moveprivateicon.svg';
+import RenameIcon from '../../assets/renameicon.svg';
+import ShareIcon from '../../assets/shareicon.svg';
+import viewIcon from '../../assets/viewicon.svg';
 
 const PlanetsGrid = styled.div`
   display: flex;
@@ -102,9 +109,14 @@ const DropdownMenu = styled.div`
   }
 `;
 
-const DropDownItem = styled.p`
+const DropDownItem = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  column-gap: 0.5rem;
+  align-items: center;
   padding: 0.5rem;
   color: black;
+
   & ~ &:hover {
     background-color: #f1f1f5;
   }
@@ -293,13 +305,28 @@ const Planets = () => {
                 <Option>
                   <img src={OptionIcon} alt="Option Icon" />
                   <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                    <DropDownItem>View</DropDownItem>
-                    <DropDownItem>Download</DropDownItem>
-                    <DropDownItem>Rename</DropDownItem>
-                    <DropDownItem>Share Link</DropDownItem>
-                    <DropDownItem>Move</DropDownItem>
-                    <DropDownItem>MarkPrivate</DropDownItem>
-                    <DropDownItem>Delete</DropDownItem>
+                    <DropDownItem>
+                      {' '}
+                      <img src={viewIcon}></img>View
+                    </DropDownItem>
+                    <DropDownItem>
+                      <img src={DownloadIcon}></img>Download
+                    </DropDownItem>
+                    <DropDownItem>
+                      <img src={RenameIcon}></img>Rename
+                    </DropDownItem>
+                    <DropDownItem>
+                      <img src={ShareIcon}></img>Share Link
+                    </DropDownItem>
+                    <DropDownItem>
+                      <img src={MoveIcon}></img>Move
+                    </DropDownItem>
+                    <DropDownItem>
+                      <img src={MovePrivateIcon}></img>MarkPrivate
+                    </DropDownItem>
+                    <DropDownItem style={{ color: 'red' }}>
+                      <img src={DeleteIcon}></img>Delete
+                    </DropDownItem>
                   </DropdownMenu>
                 </Option>
               </TitleBox>
@@ -330,13 +357,28 @@ const Planets = () => {
                   <OptionsList>
                     <img src={OptionListIcon} alt="Option List Icon" />
                     <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                      <DropDownItem>View</DropDownItem>
-                      <DropDownItem>Download</DropDownItem>
-                      <DropDownItem>Rename</DropDownItem>
-                      <DropDownItem>Share Link</DropDownItem>
-                      <DropDownItem>Move</DropDownItem>
-                      <DropDownItem>MarkPrivate</DropDownItem>
-                      <DropDownItem>Delete</DropDownItem>
+                      <DropDownItem>
+                        {' '}
+                        <img src={viewIcon}></img>View
+                      </DropDownItem>
+                      <DropDownItem>
+                        <img src={DownloadIcon}></img>Download
+                      </DropDownItem>
+                      <DropDownItem>
+                        <img src={RenameIcon}></img>Rename
+                      </DropDownItem>
+                      <DropDownItem>
+                        <img src={ShareIcon}></img>Share Link
+                      </DropDownItem>
+                      <DropDownItem>
+                        <img src={MoveIcon}></img>Move
+                      </DropDownItem>
+                      <DropDownItem>
+                        <img src={MovePrivateIcon}></img>MarkPrivate
+                      </DropDownItem>
+                      <DropDownItem style={{ color: 'red' }}>
+                        <img src={DeleteIcon}></img>Delete
+                      </DropDownItem>
                     </DropdownMenu>
                   </OptionsList>
                 </TableColumn>
