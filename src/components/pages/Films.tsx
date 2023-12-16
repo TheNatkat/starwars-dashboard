@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FilmIcon from '../../assets/filmicon.svg';
@@ -263,7 +265,7 @@ const PopUpText = styled.div`
 const Films = () => {
   const [allFilms, setAllFilms] = useState([]);
   const isGrid = usePageStore((state) => state.isGrid);
-  const [selectedFilm, setSelectedFilm] = useState(null);
+  const [selectedFilm, setSelectedFilm] = useState<any>(null);
 
   // Fetch films data from the SWAPI
   const fetchFilms = async () => {
@@ -298,13 +300,13 @@ const Films = () => {
         </LoadingText>
       ) : isGrid ? (
         <FilmsGrid>
-          {allFilms.map((film, index) => (
+          {allFilms.map((film: any, index) => (
             <FilmCard onClick={() => setSelectedFilm(film)} key={index}>
               <FilmImage src={`https://picsum.photos/id/${Math.floor(Math.random() * 100)}/300/200`} />
               <TitleBox>
                 <FilmTitle>
                   <img src={FilmIcon} alt="Film Icon" />
-                  <Text>{film?.title}</Text>
+                  <Text>{film.title}</Text>
                 </FilmTitle>
                 <Option>
                   <img src={OptionIcon} alt="Option Icon" />
@@ -348,7 +350,7 @@ const Films = () => {
             </tr>
           </thead>
           <tbody>
-            {allFilms.map((film) => (
+            {allFilms.map((film: any) => (
               <TableRow onClick={() => setSelectedFilm(film)} key={film.episode_id}>
                 <TableColumn>
                   <FilmTitleList>

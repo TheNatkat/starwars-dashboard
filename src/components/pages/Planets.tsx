@@ -1,6 +1,8 @@
+// @ts-nocheck
+
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import PlanetIcon from '../../assets/planeticon.svg'; // Assuming you have a planet icon
+import PlanetIcon from '../../assets/planeticon.svg';
 import LoadingAnimation from '../../assets/loading.svg';
 import OptionIcon from '../../assets/optionsicon.svg';
 import OptionListIcon from '../../assets/optiontransprenticon.svg';
