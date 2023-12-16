@@ -7,7 +7,7 @@ import usePageStore from '../../store/pagestore';
 import LoadingAnimation from '../../assets/loading.svg';
 import CloseIcon from '../../assets/closeicon.svg';
 
-
+// Styled components for styling
 const PeopleGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -245,12 +245,14 @@ const PopUpImage = styled.img`
   border-radius: 10px;
 `;
 
+// People component
 const People = () => {
   const [allPeople, setAllPeople] = useState([]);
   const isGrid = usePageStore((state) => state.isGrid);
   const [LoadingData, setLoadingData] = useState('People');
   const [selectedPerson, setSelectedPerson] = useState(null);
 
+  // Fetch people data from the SWAPI
   const fetchPeople = async () => {
     try {
       const response = await fetch('https://swapi.dev/api/people/');
@@ -258,14 +260,16 @@ const People = () => {
       setLoadingData('Species');
       const species = await fetch('https://swapi.dev/api/species/');
       const speciesData = await species.json();
-      const updatePeopleData = data.results.map((item: any) => {
+
+      // Update people data with species information
+      const updatePeopleData = data.results.map((item) => {
         let index = -1;
         if (item.species.length > 0) {
           let urlString = item.species[0];
           index = Number(urlString[urlString.length - 2]);
           if (index >= speciesData.results.length) index = -1;
         }
-        return { ...item, speciestype: index !== -1 ? speciesData.results[index-1].name : "N/A" };
+        return { ...item, speciestype: index !== -1 ? speciesData.results[index - 1].name : 'N/A' };
       });
 
       setAllPeople(updatePeopleData);
@@ -274,10 +278,12 @@ const People = () => {
     }
   };
 
-   const closeSidebar = () => {
-     setSelectedPerson(null);
-   };
+  // Close the sidebar for selected person
+  const closeSidebar = () => {
+    setSelectedPerson(null);
+  };
 
+  // Fetch people data on component mount
   useEffect(() => {
     fetchPeople();
   }, []);
@@ -305,13 +311,13 @@ const People = () => {
                 <Option>
                   <img src={OptionIcon} alt="Option Icon" />
                   <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                    <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                    <DropDownItem>View</DropDownItem>
+                    <DropDownItem>Download</DropDownItem>
+                    <DropDownItem>Rename</DropDownItem>
+                    <DropDownItem>Share Link</DropDownItem>
+                    <DropDownItem>Move</DropDownItem>
+                    <DropDownItem>MarkPrivate</DropDownItem>
+                    <DropDownItem>Delete</DropDownItem>
                   </DropdownMenu>
                 </Option>
               </TitleBox>
@@ -342,13 +348,13 @@ const People = () => {
                   <OptionsList>
                     <img src={OptionListIcon} alt="Option List Icon" />
                     <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                      <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                      <DropDownItem>View</DropDownItem>
+                      <DropDownItem>Download</DropDownItem>
+                      <DropDownItem>Rename</DropDownItem>
+                      <DropDownItem>Share Link</DropDownItem>
+                      <DropDownItem>Move</DropDownItem>
+                      <DropDownItem>MarkPrivate</DropDownItem>
+                      <DropDownItem>Delete</DropDownItem>
                     </DropdownMenu>
                   </OptionsList>
                 </TableColumn>

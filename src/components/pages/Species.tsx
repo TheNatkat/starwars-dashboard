@@ -243,20 +243,29 @@ const PopUpImage = styled.img`
   border-radius: 10px;
 `;
 
+// Species component
 const Species = () => {
   const [allSpecies, setAllSpecies] = useState([]);
   const isGrid = usePageStore((state) => state.isGrid);
   const [LoadingData, setLoadingData] = useState('Species');
   const [selectedSpecies, setSelected] = useState(null);
 
+  // Fetch species data from the SWAPI
   const fetchSpecies = async () => {
     try {
+      // Fetch species data
       const response = await fetch('https://swapi.dev/api/species/');
       const data = await response.json();
+
+      // Set loading data to 'Planet' for the subsequent fetch
       setLoadingData('Planet');
+
+      // Fetch planets data
       const planets = await fetch('https://swapi.dev/api/planets/');
       const planetsData = await planets.json();
-      const updateSpeciesData = data.results.map((item: any) => {
+
+      // Update species data with homeworld names
+      const updateSpeciesData = data.results.map((item) => {
         let index = -1;
         if (item.homeworld !== null) {
           let urlString = item.homeworld;
@@ -265,22 +274,29 @@ const Species = () => {
         }
         return { ...item, homelandName: index !== -1 ? planetsData.results[index - 1].name : 'N/A' };
       });
+
+      // Set the updated species data
       setAllSpecies(updateSpeciesData);
     } catch (error) {
       console.error('Error fetching species:', error);
     }
   };
 
+  // Fetch species data on component mount
   useEffect(() => {
     fetchSpecies();
   }, []);
 
+  // Close the sidebar for selected species
   const closeSidebar = () => {
     setSelected(null);
   };
 
+  // Render species component
+
   return (
     <>
+      {/* Display loading text if species data is still loading */}
       {allSpecies.length === 0 ? (
         <LoadingText>
           <Text>{`Loading ${LoadingData} Data`}</Text>
@@ -291,10 +307,11 @@ const Species = () => {
           ></img>
         </LoadingText>
       ) : isGrid ? (
+        // Display species in grid view
         <SpeciesGrid>
           {allSpecies.map((species, index) => (
             <SpeciesCard onClick={() => setSelected(species)} key={index}>
-              <SpeciesImage src={`https://picsum.photos/id/${Math.floor(Math.random() * 100)}/300/200`} />
+              <SpeciesImage src={`https://picsum.photos/id/${Math.floor(Math.random() * 100)}/300/200`} alt="Species" />
               <TitleBox>
                 <SpeciesTitle>
                   <img src={SpeciesIcon} alt="Species Icon" />
@@ -303,13 +320,13 @@ const Species = () => {
                 <Option>
                   <img src={OptionIcon} alt="Option Icon" />
                   <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                    <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                    <DropDownItem>View</DropDownItem>
+                    <DropDownItem>Download</DropDownItem>
+                    <DropDownItem>Rename</DropDownItem>
+                    <DropDownItem>Share Link</DropDownItem>
+                    <DropDownItem>Move</DropDownItem>
+                    <DropDownItem>MarkPrivate</DropDownItem>
+                    <DropDownItem>Delete</DropDownItem>
                   </DropdownMenu>
                 </Option>
               </TitleBox>
@@ -317,12 +334,13 @@ const Species = () => {
           ))}
         </SpeciesGrid>
       ) : (
+        // Display species in table view
         <TableList>
           <thead>
             <tr>
               <TableHeader>Name</TableHeader>
-              <TableHeader>Home World</TableHeader>
-              <TableHeader>Lifespan</TableHeader>
+              <TableHeader>Classification</TableHeader>
+              <TableHeader>Homeworld</TableHeader>
             </tr>
           </thead>
           <tbody>
@@ -334,19 +352,19 @@ const Species = () => {
                     <Text>{species.name}</Text>
                   </SpeciesTitleList>
                 </TableColumn>
+                <TableColumn>{species.classification}</TableColumn>
                 <TableColumn>{species.homelandName}</TableColumn>
-                <TableColumn>{species.average_lifespan}</TableColumn>
                 <TableColumn>
                   <OptionsList>
                     <img src={OptionListIcon} alt="Option List Icon" />
                     <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                      <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                      <DropDownItem>View</DropDownItem>
+                      <DropDownItem>Download</DropDownItem>
+                      <DropDownItem>Rename</DropDownItem>
+                      <DropDownItem>Share Link</DropDownItem>
+                      <DropDownItem>Move</DropDownItem>
+                      <DropDownItem>MarkPrivate</DropDownItem>
+                      <DropDownItem>Delete</DropDownItem>
                     </DropdownMenu>
                   </OptionsList>
                 </TableColumn>
@@ -355,6 +373,7 @@ const Species = () => {
           </tbody>
         </TableList>
       )}
+      {/* Display the sidebar for the selected species */}
       {selectedSpecies && (
         <PopupSidebar>
           <PopUpTitleWrapper>
@@ -368,23 +387,14 @@ const Species = () => {
             <PopUpText>{selectedSpecies.name}</PopUpText>
             <PopTextHeading>Classification</PopTextHeading>
             <PopUpText>{selectedSpecies.classification}</PopUpText>
-            <PopTextHeading>Average Lifespan</PopTextHeading>
-            <PopUpText>{selectedSpecies.average_lifespan}</PopUpText>
-            <PopTextHeading>Language</PopTextHeading>
-            <PopUpText>{selectedSpecies.language}</PopUpText>
             <PopTextHeading>Designation</PopTextHeading>
             <PopUpText>{selectedSpecies.designation}</PopUpText>
-            <PopTextHeading>Average Height</PopTextHeading>
-            <PopUpText>{selectedSpecies.average_height}</PopUpText>
+            <PopTextHeading>Homeworld</PopTextHeading>
+            <PopUpText>{selectedSpecies.homelandName}</PopUpText>
+            <PopTextHeading>Language</PopTextHeading>
+            <PopUpText>{selectedSpecies.language}</PopUpText>
             <PopTextHeading>Average Lifespan</PopTextHeading>
             <PopUpText>{selectedSpecies.average_lifespan}</PopUpText>
-            <PopTextHeading>Eye Colors</PopTextHeading>
-            <PopUpText>{selectedSpecies.eye_colors}</PopUpText>
-            <PopTextHeading>Hair Colors</PopTextHeading>
-            <PopUpText>{selectedSpecies.hair_colors}</PopUpText>
-            <PopTextHeading>Skin Colors</PopTextHeading>
-            <PopUpText>{selectedSpecies.skin_colors}</PopUpText>
-            {/* Add more details as needed */}
           </PopUpData>
           <PopUpCloseWrapper>
             <CloseButton onClick={closeSidebar}>Close</CloseButton>

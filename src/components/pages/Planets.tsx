@@ -243,11 +243,13 @@ const PopUpImage = styled.img`
   border-radius: 10px;
 `;
 
+// Planets component
 const Planets = () => {
   const [allPlanets, setAllPlanets] = useState([]);
   const isGrid = usePageStore((state) => state.isGrid);
   const [selectedPlanet, setSelectedPlanet] = useState(null);
 
+  // Fetch planets data from the SWAPI
   const fetchPlanets = async () => {
     try {
       const response = await fetch('https://swapi.dev/api/planets/');
@@ -258,10 +260,12 @@ const Planets = () => {
     }
   };
 
+  // Close the sidebar for selected planet
   const closeSidebar = () => {
     setSelectedPlanet(null);
   };
 
+  // Fetch planets data on component mount
   useEffect(() => {
     fetchPlanets();
   }, []);
@@ -289,13 +293,13 @@ const Planets = () => {
                 <Option>
                   <img src={OptionIcon} alt="Option Icon" />
                   <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                    <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                    <DropDownItem>View</DropDownItem>
+                    <DropDownItem>Download</DropDownItem>
+                    <DropDownItem>Rename</DropDownItem>
+                    <DropDownItem>Share Link</DropDownItem>
+                    <DropDownItem>Move</DropDownItem>
+                    <DropDownItem>MarkPrivate</DropDownItem>
+                    <DropDownItem>Delete</DropDownItem>
                   </DropdownMenu>
                 </Option>
               </TitleBox>
@@ -326,13 +330,13 @@ const Planets = () => {
                   <OptionsList>
                     <img src={OptionListIcon} alt="Option List Icon" />
                     <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                      <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                      <DropDownItem>View</DropDownItem>
+                      <DropDownItem>Download</DropDownItem>
+                      <DropDownItem>Rename</DropDownItem>
+                      <DropDownItem>Share Link</DropDownItem>
+                      <DropDownItem>Move</DropDownItem>
+                      <DropDownItem>MarkPrivate</DropDownItem>
+                      <DropDownItem>Delete</DropDownItem>
                     </DropdownMenu>
                   </OptionsList>
                 </TableColumn>

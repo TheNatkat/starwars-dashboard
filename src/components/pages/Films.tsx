@@ -145,7 +145,7 @@ const TableRow = styled.tr`
 
 const TableColumn = styled.td`
   padding: 1rem;
- 
+
   border-bottom: 1px solid white;
 `;
 
@@ -248,36 +248,28 @@ const PopUpText = styled.div`
   padding: 1rem;
 `;
 
-
-
 const Films = () => {
   const [allFilms, setAllFilms] = useState([]);
   const isGrid = usePageStore((state) => state.isGrid);
   const [selectedFilm, setSelectedFilm] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filmsPerPage] = useState(10);
-  const [totalFilms, setTotalFilms] = useState(0);
-  const indexOfLastFilm = currentPage * filmsPerPage;
-  const indexOfFirstFilm = indexOfLastFilm - filmsPerPage;
-  const currentFilms = allFilms.slice(indexOfFirstFilm, indexOfLastFilm);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
+  // Fetch films data from the SWAPI
   const fetchFilms = async () => {
     try {
       const response = await fetch('https://swapi.dev/api/films/');
       const data = await response.json();
       setAllFilms(data.results);
-      setTotalFilms(data.count);
     } catch (error) {
       console.error('Error fetching films:', error);
     }
   };
 
+  // Close the sidebar for selected film
   const closeSidebar = () => {
     setSelectedFilm(null);
   };
 
+  // Fetch films data on component mount
   useEffect(() => {
     fetchFilms();
   }, []);
@@ -305,13 +297,13 @@ const Films = () => {
                 <Option>
                   <img src={OptionIcon} alt="Option Icon" />
                   <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                    <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                    <DropDownItem>View</DropDownItem>
+                    <DropDownItem>Download</DropDownItem>
+                    <DropDownItem>Rename</DropDownItem>
+                    <DropDownItem>Share Link</DropDownItem>
+                    <DropDownItem>Move</DropDownItem>
+                    <DropDownItem>MarkPrivate</DropDownItem>
+                    <DropDownItem>Delete</DropDownItem>
                   </DropdownMenu>
                 </Option>
               </TitleBox>
@@ -343,13 +335,13 @@ const Films = () => {
                   <OptionsList>
                     <img src={OptionListIcon} alt="Option List Icon" />
                     <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                      <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                      <DropDownItem>View</DropDownItem>
+                      <DropDownItem>Download</DropDownItem>
+                      <DropDownItem>Rename</DropDownItem>
+                      <DropDownItem>Share Link</DropDownItem>
+                      <DropDownItem>Move</DropDownItem>
+                      <DropDownItem>MarkPrivate</DropDownItem>
+                      <DropDownItem>Delete</DropDownItem>
                     </DropdownMenu>
                   </OptionsList>
                 </TableColumn>
@@ -358,8 +350,6 @@ const Films = () => {
           </tbody>
         </TableList>
       )}
-
-      <Pagination filmsPerPage={filmsPerPage} totalFilms={totalFilms} paginate={paginate} currentPage={currentPage} />
 
       {selectedFilm && (
         <PopupSidebar>
@@ -388,26 +378,6 @@ const Films = () => {
         </PopupSidebar>
       )}
     </>
-  );
-};
-
-const Pagination = ({ filmsPerPage, totalFilms, paginate, currentPage }) => {
-  const pageNumbers = [];
-
-  for (let i = 1; i <= Math.ceil(totalFilms / filmsPerPage); i++) {
-    pageNumbers.push(i);
-  }
-
-  return (
-    <nav>
-      <ul>
-        {pageNumbers.map((number) => (
-          <li key={number} onClick={() => paginate(number)} className={currentPage === number ? 'active' : ''}>
-            {number}
-          </li>
-        ))}
-      </ul>
-    </nav>
   );
 };
 

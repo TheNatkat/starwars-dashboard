@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import VehicleIcon from '../../assets/vehicleicon.svg'; 
+import VehicleIcon from '../../assets/vehicleicon.svg';
 import LoadingAnimation from '../../assets/loading.svg';
 import OptionIcon from '../../assets/optionsicon.svg';
 import OptionListIcon from '../../assets/optiontransprenticon.svg';
@@ -243,12 +243,16 @@ const PopUpImage = styled.img`
   border-radius: 10px;
 `;
 
+// Vehicles component definition
 const Vehicles = () => {
+  // State for storing all vehicles data
   const [allVehicles, setAllVehicles] = useState([]);
+  // State for tracking whether the view is in grid or list
   const isGrid = usePageStore((state) => state.isGrid);
+  // State for tracking the selected vehicle for detailed view
   const [selectedVehicle, setSelected] = useState(null);
-  
 
+  // Function to fetch vehicles data from the SWAPI
   const fetchVehicles = async () => {
     try {
       const response = await fetch('https://swapi.dev/api/vehicles/');
@@ -258,13 +262,18 @@ const Vehicles = () => {
       console.error('Error fetching vehicles:', error);
     }
   };
-   const closeSidebar = () => {
-     setSelected(null);
-   };
 
+  // Function to close the detailed view sidebar
+  const closeSidebar = () => {
+    setSelected(null);
+  };
+
+  // Fetch vehicles data on component mount
   useEffect(() => {
     fetchVehicles();
   }, []);
+
+  // Rendering the Vehicles component
 
   return (
     <>
@@ -290,13 +299,13 @@ const Vehicles = () => {
                 <Option>
                   <img src={OptionIcon} alt="Option Icon" />
                   <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                    <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                    <DropDownItem>View</DropDownItem>
+                    <DropDownItem>Download</DropDownItem>
+                    <DropDownItem>Rename</DropDownItem>
+                    <DropDownItem>Share Link</DropDownItem>
+                    <DropDownItem>Move</DropDownItem>
+                    <DropDownItem>MarkPrivate</DropDownItem>
+                    <DropDownItem>Delete</DropDownItem>
                   </DropdownMenu>
                 </Option>
               </TitleBox>
@@ -327,13 +336,13 @@ const Vehicles = () => {
                   <OptionsList>
                     <img src={OptionListIcon} alt="Option List Icon" />
                     <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                      <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                      <DropDownItem>View</DropDownItem>
+                      <DropDownItem>Download</DropDownItem>
+                      <DropDownItem>Rename</DropDownItem>
+                      <DropDownItem>Share Link</DropDownItem>
+                      <DropDownItem>Move</DropDownItem>
+                      <DropDownItem>MarkPrivate</DropDownItem>
+                      <DropDownItem>Delete</DropDownItem>
                     </DropdownMenu>
                   </OptionsList>
                 </TableColumn>

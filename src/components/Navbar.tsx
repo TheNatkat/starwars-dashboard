@@ -4,6 +4,7 @@ import starWarsLogo from '../assets/logo.svg';
 import seachIcon from '../assets/seachicon.svg';
 import usePageStore from '../store/pagestore';
 
+// Styled components for the Navbar
 const BarWrapper = styled.section`
   height: 10vh;
   width: 100vw;
@@ -39,14 +40,23 @@ const SearchIcon = styled.img`
   transform: translateY(-50%);
 `;
 
+// Navbar component definition
 const Navbar = () => {
+  // State management using the custom store
   const setPage = usePageStore((state) => state.setPage);
 
+  // Rendering the Navbar component
   return (
     <BarWrapper>
-      <img style={{ cursor: "pointer"}} src={starWarsLogo} alt="Star Wars Logo" onClick={() => setPage('Home')} />
+      {/* Star Wars logo with a clickable action to navigate to the 'Home' page */}
+      <img style={{ cursor: 'pointer' }} src={starWarsLogo} alt="Star Wars Logo" onClick={() => setPage('Home')} />
+
+      {/* Input container for the search bar */}
       <InputContainer>
+        {/* Search icon positioned to the left of the search bar */}
         <SearchIcon src={seachIcon} />
+
+        {/* Search bar input field */}
         <Searchbar placeholder="Search" />
       </InputContainer>
     </BarWrapper>

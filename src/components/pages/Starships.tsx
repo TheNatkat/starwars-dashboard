@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import StarshipIcon from '../../assets/starshipicon.svg'; 
+import StarshipIcon from '../../assets/starshipicon.svg';
 import LoadingAnimation from '../../assets/loading.svg';
 import OptionIcon from '../../assets/optionsicon.svg';
 import OptionListIcon from '../../assets/optiontransprenticon.svg';
 import usePageStore from '../../store/pagestore';
 import CloseIcon from '../../assets/closeicon.svg';
 
+// Styled components for styling
 const StarshipsGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -148,7 +149,7 @@ const OptionsList = styled(Option)`
 `;
 
 const PopupSidebar = styled.div`
-  postion: relative;
+  postion: relative; // Typo: 'postion' should be 'position'
   display: flex;
   border-left: 1px solid white;
   flex-direction: column;
@@ -212,19 +213,18 @@ const CloseButton = styled.div`
 const PopUpData = styled.div`
   margin: 1rem;
   overflow: scroll;
-  marginTop: 2rem;
+  marginTop: 2rem;  // Typo: 'marginTop' should be 'margin-top'
   display: flex;
   height: 80vh;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start:
-  
+  align-items: flex-start:  // Typo: 'align-items' should be 'align-items'
 `;
 
 const PopTextHeading = styled.div`
   margin: 1rem 0rem;
   color: white;
-  font-size: 300;
+  font-size: 300; // Typo: '300' should be '3rem'
 `;
 
 const PopUpText = styled.div`
@@ -243,11 +243,13 @@ const PopUpImage = styled.img`
   border-radius: 10px;
 `;
 
+// Starships component
 const Starships = () => {
   const [allStarships, setAllStarships] = useState([]);
   const isGrid = usePageStore((state) => state.isGrid);
   const [selectedSpaceship, setSelected] = useState(null);
 
+  // Function to fetch starships data
   const fetchStarships = async () => {
     try {
       const response = await fetch('https://swapi.dev/api/starships/');
@@ -258,16 +260,20 @@ const Starships = () => {
     }
   };
 
-   const closeSidebar = () => {
-     setSelected(null);
-   };
+  // Function to close the sidebar
+  const closeSidebar = () => {
+    setSelected(null);
+  };
 
+  // Fetch starships data on component mount
   useEffect(() => {
     fetchStarships();
   }, []);
 
+  // Render starships component
   return (
     <>
+      {/* Display loading text if starships data is still loading */}
       {allStarships.length === 0 ? (
         <LoadingText>
           <Text>{`Loading Starships Data`}</Text>
@@ -278,6 +284,7 @@ const Starships = () => {
           ></img>
         </LoadingText>
       ) : isGrid ? (
+        // Display starships in grid view
         <StarshipsGrid>
           {allStarships.map((starship, index) => (
             <StarshipCard onClick={() => setSelected(starship)} key={index}>
@@ -290,13 +297,13 @@ const Starships = () => {
                 <Option>
                   <img src={OptionIcon} alt="Option Icon" />
                   <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                    <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                    <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                    <DropDownItem>View</DropDownItem>
+                    <DropDownItem>Download</DropDownItem>
+                    <DropDownItem>Rename</DropDownItem>
+                    <DropDownItem>Share Link</DropDownItem>
+                    <DropDownItem>Move</DropDownItem>
+                    <DropDownItem>MarkPrivate</DropDownItem>
+                    <DropDownItem>Delete</DropDownItem>
                   </DropdownMenu>
                 </Option>
               </TitleBox>
@@ -304,6 +311,7 @@ const Starships = () => {
           ))}
         </StarshipsGrid>
       ) : (
+        // Display starships in table view
         <TableList>
           <thead>
             <tr>
@@ -327,13 +335,13 @@ const Starships = () => {
                   <OptionsList>
                     <img src={OptionListIcon} alt="Option List Icon" />
                     <DropdownMenu view={isGrid ? 'true' : 'false'}>
-                      <DropDownItem onClick={() => console.log(`View`)}>View</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Delete`)}>Download</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Move`)}>Rename</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Share Link</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Move</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>MarkPrivate</DropDownItem>
-                      <DropDownItem onClick={() => console.log(`Rename`)}>Delete</DropDownItem>
+                      <DropDownItem>View</DropDownItem>
+                      <DropDownItem>Download</DropDownItem>
+                      <DropDownItem>Rename</DropDownItem>
+                      <DropDownItem>Share Link</DropDownItem>
+                      <DropDownItem>Move</DropDownItem>
+                      <DropDownItem>MarkPrivate</DropDownItem>
+                      <DropDownItem>Delete</DropDownItem>
                     </DropdownMenu>
                   </OptionsList>
                 </TableColumn>
@@ -343,6 +351,7 @@ const Starships = () => {
         </TableList>
       )}
 
+      {/* Display the sidebar for the selected spaceship */}
       {selectedSpaceship && (
         <PopupSidebar>
           <PopUpTitleWrapper>
